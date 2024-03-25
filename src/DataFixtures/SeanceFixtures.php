@@ -15,12 +15,12 @@ class SeanceFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create("fr_FR");
-        for ($i=281;$i<290;$i++){
+        for ($i=1;$i<11;$i++){
             $repoFilm = $manager->getRepository(Film::class);
             $filmRec= $repoFilm->find($i);
 
 
-            $salle = $manager->getRepository(Salle::class)->find($i-10);
+            $salle = $manager->getRepository(Salle::class)->find($i);
             $seance = new Seance();
             $seance->setFilm($filmRec);
             $seance->setSalle($salle);
