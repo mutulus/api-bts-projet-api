@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Film;
+use App\Entity\Seance;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,17 +23,52 @@ class FilmRepository extends ServiceEntityRepository
         parent::__construct($registry, Film::class);
     }
 
-    public function findFilmAffiche() : array
+//    public function findFilmAffiche() : array
+//    {
+//        $date = new \DateTime();
+//        $dateString = $date->format("Y-m-d h:i");
+//        return $this->createQueryBuilder('f')
+//            ->select('f','s.dateProjection')
+//            ->from('App:Seance' ,'s')
+//            ->innerJoin('f.id = s.film ','fs')
+//            ->andWhere("s.dateProjection >= :date")
+//            ->setParameter("date",$dateString)
+//            ->orderBy('s.dateProjection')
+//            ->getQuery()
+//            ->getResult()
+//            ;
+//    }
+    public function findFilmAffiche(): array
     {
         $date = new \DateTime();
-        $dateString = $date->format("Y-m-d h:i:s");
-        return $this->createQueryBuilder('f')
-            ->select('s')
-            ->innerJoin('App\Entity\Seance' , 's')
-            ->andWhere("s.dateProjection >= '".$dateString."'")
-            ->getQuery()
-            ->getResult()
-            ;
+          return $this->createQueryBuilder('f')
+              ->select('f')
+              ->from(Seance::class, 's')
+              ->join('s.film', 'fs')
+              ->where('s.dateProjection >= :date')
+              ->setParameter('date', $date)
+              ->orderBy('s.dateProjection', 'ASC')
+              ->getQuery()
+              ->getResult();
+//
+//->getEntityManager()
+//            ->createQuery(
+//                'SELECT f
+//            FROM App\Entity\Seance as s
+//            JOIN s.film as f
+//            WHERE s.dateProjection >= CURRENT_TIMESTAMP()'
+//            )
+//            ->getResult();
+
+//        return $this->createQueryBuilder('f')
+//            ->select('f')
+//            ->from('App:Seance' ,'s')
+//            ->innerJoin('f.id', 's')
+//            ->where('s.dateProjection >= :date')
+//            ->setParameter('date', $date)
+//            ->orderBy('s.dateProjection', 'ASC')
+//            ->getQuery()
+//            ->getResult();
     }
 
     //    /**

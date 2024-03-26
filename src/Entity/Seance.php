@@ -22,9 +22,13 @@ class Seance
 
     #[ORM\Column]
     private ?float $tarifReduit = null;
-    #[ORM\ManyToOne(targetEntity: Film::class)]
+
+    #[ORM\ManyToOne(inversedBy: 'seances')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Film $film = null;
-    #[ORM\ManyToOne(targetEntity: Salle::class)]
+
+    #[ORM\ManyToOne(inversedBy: 'seances')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Salle $salle = null;
 
     public function getId(): ?int
