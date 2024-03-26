@@ -24,7 +24,7 @@ class Reservation
     private ?float $montant = null;
     #[ORM\ManyToOne]
     private ?Seance $seance = null;
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user = null;
 
     public function getId(): ?int

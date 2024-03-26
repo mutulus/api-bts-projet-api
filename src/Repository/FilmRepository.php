@@ -21,6 +21,19 @@ class FilmRepository extends ServiceEntityRepository
         parent::__construct($registry, Film::class);
     }
 
+    public function findFilmAffiche() : array
+    {
+        $date = new \DateTime();
+        $dateString = $date->format("Y-m-d h:i:s");
+        return $this->createQueryBuilder('f')
+            ->select('s')
+            ->innerJoin('App\Entity\Seance' , 's')
+            ->andWhere("s.dateProjection >= '".$dateString."'")
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     //    /**
     //     * @return Film[] Returns an array of Film objects
     //     */

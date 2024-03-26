@@ -22,9 +22,9 @@ class Seance
 
     #[ORM\Column]
     private ?float $tarifReduit = null;
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Film::class)]
     private ?Film $film = null;
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Salle::class)]
     private ?Salle $salle = null;
 
     public function getId(): ?int
