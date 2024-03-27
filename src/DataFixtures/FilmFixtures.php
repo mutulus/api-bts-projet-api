@@ -19,6 +19,7 @@ class FilmFixtures extends Fixture
             $film->setTitre($faker->movie);
             $film->setDureeMin(random_int(90,150));
             $manager->persist($film);
+            $manager->persist($film);
         }
         $manager->flush();
     }
