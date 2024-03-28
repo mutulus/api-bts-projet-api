@@ -46,9 +46,21 @@ class FilmRepository extends ServiceEntityRepository
             ->innerJoin('f.seances', 's')
             ->where('s.dateProjection >= :date')
             ->setParameter('date', $date)
-            ->orderBy('s.dateProjection', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function findFilmDeatilId(int $id) : array
+    {
+        return $this->createQueryBuilder('f')
+            ->select('f','s')
+            ->innerJoin('f.seances','s')
+            ->where('f.id = :id')
+            ->setParameter('id',$id)
+            ->orderBy('s.dateProjection','ASC')
+            ->getQuery()
+            ->getResult();
+
     }
 
 }
