@@ -50,7 +50,7 @@ class FilmRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findFilmDeatilId(int $id) : array
+    public function findFilmDetailId(int $id) : array
     {
         return $this->createQueryBuilder('f')
             ->select('f','s')
@@ -59,8 +59,7 @@ class FilmRepository extends ServiceEntityRepository
             ->setParameter('id',$id)
             ->orderBy('s.dateProjection','ASC')
             ->getQuery()
-            ->getResult();
-
+            ->getArrayResult();
     }
 
 }

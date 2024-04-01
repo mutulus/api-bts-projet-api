@@ -23,7 +23,7 @@ class FilmController extends AbstractController
     #[Route('/films/{id}',name: 'app_films_id',requirements: ['id' => '\d+'], methods: ['GET'])]
     public function detail(FilmRepository $filmRepository,SerializerInterface $serializer,int $id):Response
     {
-        $film = $filmRepository->findOneBy(['id'=>$id]);
+        $film = $filmRepository->findFilmDetailId($id);
         $filmJson = $serializer->serialize($film,'json',['groups'=>'detail_film']);
         return new Response($filmJson,Response::HTTP_OK,
             ['content-type' => 'application/json']
