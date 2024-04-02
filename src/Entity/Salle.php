@@ -14,12 +14,15 @@ class Salle
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['detail_film'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 120)]
+    #[Groups(['detail_film'])]
     private ?string $nom = null;
 
     #[ORM\Column]
+    #[Groups(['detail_film'])]
     private ?int $nbPlaces = null;
 
     #[ORM\OneToMany(targetEntity: Seance::class, mappedBy: 'salle')]

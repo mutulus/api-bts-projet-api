@@ -34,6 +34,7 @@ class Seance
 
     #[ORM\ManyToOne(inversedBy: 'seances')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['detail_film'])]
     private ?Salle $salle = null;
 
     public function getId(): ?int

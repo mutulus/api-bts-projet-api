@@ -52,14 +52,17 @@ class FilmRepository extends ServiceEntityRepository
 
     public function findFilmDetailId(int $id) : array
     {
+        $date=new \DateTime();
         return $this->createQueryBuilder('f')
             ->select('f','s')
             ->innerJoin('f.seances','s')
             ->where('f.id = :id')
+            ->andWhere('s.dateProjection > :date')
+            ->setParameter('date',$date)
             ->setParameter('id',$id)
             ->orderBy('s.dateProjection','ASC')
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 
 }
