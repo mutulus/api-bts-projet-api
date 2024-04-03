@@ -30,10 +30,10 @@ class UserController extends AbstractController
         $userBDD->setPassword($hasher->hashPassword($user,$user->getPassword()));
         $erreurs=$validator->validate($userBDD);
         if (count($erreurs)!=0 or !filter_var($userBDD->getEmail(), FILTER_VALIDATE_EMAIL)){
-            return new Response("L'email est invalide",Response::HTTP_BAD_REQUEST);
+            return new Response("L'email est invalide",Response::HTTP_BAD_REQUEST,['content-type'=>'Application/json']);
         }
         if ($userRepository->findOneBy(['email'=>$user->getEmail()])) {
-            return new Response("L'email est déjà utilisé",Response::HTTP_BAD_REQUEST);
+            return new Response("L'email est déjà utilisé",Response::HTTP_BAD_REQUEST,['content-type'=>'Application/json']);
         }
             $entityManager->persist($userBDD);
             $entityManager->flush();
