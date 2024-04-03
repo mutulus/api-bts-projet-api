@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Repository\CategorieRepository;
+use App\Repository\FilmRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -18,7 +20,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserController extends AbstractController
 {
     #[Route('/register', name: 'app_user_register',methods: ['POST'])]
-    public function register(\Symfony\Component\HttpFoundation\Request $request, SerializerInterface $serializer,EntityManagerInterface $entityManager,UserPasswordHasherInterface $hasher,ValidatorInterface $validator): Response
+    public function register(\Symfony\Component\HttpFoundation\Request $request, SerializerInterface $serializer,EntityManagerInterface $entityManager,UserPasswordHasherInterface $hasher,ValidatorInterface $validator,UserRepository $userRepository): Response
     {
         $userBDD=new User();
         $bodyrequest = $request->getContent();
@@ -27,14 +29,17 @@ class UserController extends AbstractController
         $userBDD->setEmail($user->getEmail());
         $userBDD->setPassword($hasher->hashPassword($user,$user->getPassword()));
         $erreurs=$validator->validate($userBDD);
-        if (count($erreurs)!=0){
-            echo $erreurs;
-        }else {
+        if (count($erreurs)!=0 or !filter_var($userBDD->getEmail(), FILTER_VALIDATE_EMAIL)){
+            return new Response("L'email est invalide",Response::HTTP_BAD_REQUEST);
+        }
+        if ($userRepository->findOneBy(['email'=>$user->getEmail()])) {
+            return new Response("L'email est déjà utilisé",Response::HTTP_BAD_REQUEST);
+        }
             $entityManager->persist($userBDD);
             $entityManager->flush();
             $userJson=$serializer->serialize($userBDD,'json',['groups'=>'user_info']);
             return new Response( $userJson,Response::HTTP_CREATED, ["content-type" => "application/json"]);
-        }
+
 
     }
 }
