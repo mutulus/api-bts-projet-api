@@ -22,6 +22,7 @@ class UserController extends AbstractController
     #[Route('/register', name: 'app_user_register',methods: ['POST'])]
     public function register(\Symfony\Component\HttpFoundation\Request $request, SerializerInterface $serializer,EntityManagerInterface $entityManager,UserPasswordHasherInterface $hasher,ValidatorInterface $validator,UserRepository $userRepository): Response
     {
+
         $userBDD=new User();
         $bodyrequest = $request->getContent();
         $user = $serializer->deserialize($bodyrequest, User::class, 'json');
@@ -39,7 +40,6 @@ class UserController extends AbstractController
             $entityManager->flush();
             $userJson=$serializer->serialize($userBDD,'json',['groups'=>'user_info']);
             return new Response( $userJson,Response::HTTP_CREATED, ["content-type" => "application/json"]);
-
 
     }
 }
