@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Repository\CategorieRepository;
 use App\Repository\FilmRepository;
 use App\Repository\UserRepository;
+use App\Services\Validateurs;
 use Doctrine\ORM\EntityManagerInterface;
 use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +21,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserController extends AbstractController
 {
     #[Route('/register', name: 'app_user_register',methods: ['POST'])]
-    public function register(\Symfony\Component\HttpFoundation\Request $request, SerializerInterface $serializer,EntityManagerInterface $entityManager,UserPasswordHasherInterface $hasher,ValidatorInterface $validator,UserRepository $userRepository): Response
+    public function register(\Symfony\Component\HttpFoundation\Request $request, SerializerInterface $serializer,EntityManagerInterface $entityManager,UserPasswordHasherInterface $hasher,ValidatorInterface $validator,UserRepository $userRepository,Validateurs $validateurs): Response
     {
 
         $userBDD=new User();
@@ -37,6 +38,10 @@ class UserController extends AbstractController
         }
         if ($userRepository->findOneBy(['email'=>$user->getEmail()])) {
             $userJson = json_encode(["Code"=>"400","Erreur"=>"L'email est déjà utilisé"]);
+            return new Response($userJson,Response::HTTP_BAD_REQUEST,['content-type'=>'Application/json']);
+        }
+        if (!$validateurs->verifMdp($user->getPassword())) {
+            $userJson = json_encode(["Code"=>"400","Erreur"=>"Le mot de passe n'est pas assez complexe"]);
             return new Response($userJson,Response::HTTP_BAD_REQUEST,['content-type'=>'Application/json']);
         }
             $entityManager->persist($userBDD);
