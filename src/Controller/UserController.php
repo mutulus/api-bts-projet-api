@@ -31,7 +31,8 @@ class UserController extends AbstractController
         $erreurs=$validator->validate($userBDD);
 
         if (count($erreurs)!=0 or !filter_var($userBDD->getEmail(), FILTER_VALIDATE_EMAIL)){
-            return new Response("L'email est invalide",Response::HTTP_BAD_REQUEST,['content-type'=>'Application/json']);
+            $userJson = json_encode(["Code"=>"400","Erreur"=>"L'email est invalide"]);
+            return new Response($userJson,Response::HTTP_BAD_REQUEST,['content-type'=>'Application/json']);
         }
         if ($userRepository->findOneBy(['email'=>$user->getEmail()])) {
             $userJson = json_encode(["Code"=>"400","Erreur"=>"L'email est déjà utilisé"]);
