@@ -28,10 +28,10 @@ Class Reservation{
 
 
 
-Reservation --> "1..1" Utilisateur : Un utilisateur réserve une séance
-Reservation --> "1..1" Séance : Une séance est réservée
-Séance  --> "1..1" Film : Un film est diffusé
-Séance --> "1..1" Salle : Une salle est assignée
+Reservation "0..*" -- "1..1" Utilisateur : Un utilisateur réserve une séance
+Reservation "0..*" -- "1..1" Séance : Une séance est réservée
+Séance "1..*" -- "1..1" Film : Un film est diffusé
+Séance "1..*" -- "1..1" Salle : Une salle est assignée
 
 
 @enduml

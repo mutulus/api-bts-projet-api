@@ -29,15 +29,17 @@ class UserController extends AbstractController
         $userBDD->setEmail($user->getEmail());
         $userBDD->setPassword($hasher->hashPassword($user,$user->getPassword()));
         $erreurs=$validator->validate($userBDD);
+
         if (count($erreurs)!=0 or !filter_var($userBDD->getEmail(), FILTER_VALIDATE_EMAIL)){
             return new Response("L'email est invalide",Response::HTTP_BAD_REQUEST,['content-type'=>'Application/json']);
         }
         if ($userRepository->findOneBy(['email'=>$user->getEmail()])) {
-            return new Response("L'email est déjà utilisé",Response::HTTP_BAD_REQUEST,['content-type'=>'Application/json']);
+            $userJson = json_encode(["Code"=>"400","Erreur"=>"L'email est déjà utilisé"]);
+            return new Response($userJson,Response::HTTP_BAD_REQUEST,['content-type'=>'Application/json']);
         }
             $entityManager->persist($userBDD);
             $entityManager->flush();
-            $userJson=$serializer->serialize($userBDD,'json',['groups'=>'user_info']);
+            $userJson=$serializer->serialize([$userBDD,"code"=>201],'json',['groups'=>'user_info']);
             return new Response( $userJson,Response::HTTP_CREATED, ["content-type" => "application/json"]);
 
 
