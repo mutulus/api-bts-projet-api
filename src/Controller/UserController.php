@@ -27,7 +27,7 @@ class UserController extends AbstractController
         $userBDD=new User();
         $bodyrequest = $request->getContent();
         $user = $serializer->deserialize($bodyrequest, User::class, 'json');
-        $userBDD->setRoles($user->getRoles());
+        $userBDD->setRoles(['ROLE_USER']);
         $userBDD->setEmail($user->getEmail());
         $userBDD->setPassword($hasher->hashPassword($user,$user->getPassword()));
         $erreurs=$validator->validate($userBDD);

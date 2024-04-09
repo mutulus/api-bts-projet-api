@@ -24,6 +24,7 @@ class FilmController extends AbstractController
     public function detail(FilmRepository $filmRepository,SerializerInterface $serializer,int $id):Response
     {
         $film = $filmRepository->findFilmDetailId($id);
+        if (empty($film)) {}
         $filmJson = $serializer->serialize($film,'json',['groups'=>'detail_film']);
         return new Response($filmJson,Response::HTTP_OK,
             ['content-type' => 'application/json']
