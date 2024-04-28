@@ -90,7 +90,7 @@ class Seance
 
     public function getSalle(): ?Salle
     {
-       return $this->salle;
+        return $this->salle;
     }
 
 
