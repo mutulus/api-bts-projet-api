@@ -27,6 +27,9 @@ class Seance
     #[ORM\Column]
     #[Groups(['detail_film'])]
     private ?float $tarifReduit = null;
+    #[ORM\Column]
+    #[Groups(['detail_film'])]
+    private ?int $nbPlace = null;
 
     #[ORM\ManyToOne(inversedBy: 'seances')]
     #[ORM\JoinColumn(nullable: false)]
@@ -97,6 +100,16 @@ class Seance
     public function setSalle(?Salle $salle): void
     {
         $this->salle = $salle;
+    }
+
+    public function getNbPlace(): ?int
+    {
+        return $this->nbPlace;
+    }
+
+    public function setNbPlace(?int $nbPlace): void
+    {
+        $this->nbPlace = $nbPlace;
     }
 
 
