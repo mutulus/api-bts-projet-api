@@ -43,8 +43,9 @@ class FilmController extends AbstractController
             ['content-type' => 'application/json']
         );
     }
+
     #[Route('/reserver/{id}', name: 'app_reserver', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function reservation(SeanceRepository $seanceRepository, \Symfony\Component\HttpFoundation\Request $request,SerializerInterface $serializer,SalleRepository $salleRepository,int $id,EntityManagerInterface $entityManager):Response
+    public function reservation(SeanceRepository $seanceRepository, \Symfony\Component\HttpFoundation\Request $request, SerializerInterface $serializer, SalleRepository $salleRepository, int $id, EntityManagerInterface $entityManager): Response
     {
         $reservation = $request->getContent();
         $newReservation = new Reservation();
@@ -53,15 +54,15 @@ class FilmController extends AbstractController
         $seance = $seanceRepository->find($id);
         $salle = $salleRepository->find($seance->getSalle()->getId());
         if (empty($seance)) {
-            $reservationJson = json_encode(['Code'=>"404","Erreur"=>"Ce film n'existe pas"]);
+            $reservationJson = json_encode(['Code' => "404", "Erreur" => "Ce film n'existe pas"]);
             return new Response($reservationJson, Response::HTTP_NOT_FOUND);
         }
-        if ($seance->getDateProjection()>new \DateTime()) {
-            $reservationJson = json_encode(['Code'=>'404','Erreur' => "Cette séance n'éxiste plus"]);
+        if ($seance->getDateProjection() > new \DateTime()) {
+            $reservationJson = json_encode(['Code' => '404', 'Erreur' => "Cette séance n'éxiste plus"]);
             return new Response($reservationJson, Response::HTTP_NOT_FOUND);
         }
-        if ($seance->getNbPlace()<$reservation->getNbPlaces()) {
-            $reservationJson = json_encode(['Code'=>'400','Erreur' => "Cette séance n'a plus assez de place"]);
+        if ($seance->getNbPlace() < $reservation->getNbPlaces()) {
+            $reservationJson = json_encode(['Code' => '400', 'Erreur' => "Cette séance n'a plus assez de place"]);
             return new Response($reservationJson, Response::HTTP_BAD_REQUEST);
         }
         $montant = $reservation->getMontant();
@@ -72,11 +73,11 @@ class FilmController extends AbstractController
         $newReservation->setNbPlaces($nbPlaces);
         $newReservation->setSeance($seance);
         $newReservation->setUser($user);
-        $seance->setNbPlace($seance->getNbPlace()-$nbPlaces);
+        $seance->setNbPlace($seance->getNbPlace() - $nbPlaces);
         $entityManager->persist($newReservation);
         $entityManager->persist($seance);
         $entityManager->flush();
-        $reservationJson = json_encode(["Code"=>'200',"Message"=>"La réservation a bien été effectuée pour le film ".$seance->getFilm()->getTitre()."."]);
+        $reservationJson = json_encode(["Code" => '200', "Message" => "La réservation a bien été effectuée pour le film " . $seance->getFilm()->getTitre() . "."]);
         return new Response($reservationJson, Response::HTTP_OK);
 
     }
