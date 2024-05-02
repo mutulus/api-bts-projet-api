@@ -52,7 +52,6 @@ class FilmController extends AbstractController
         $reservation = $serializer->deserialize($reservation, Reservation::class, 'json');
         $user = $this->getUser();
         $seance = $seanceRepository->find($id);
-        $salle = $salleRepository->find($seance->getSalle()->getId());
         if (empty($seance)) {
             $reservationJson = json_encode(['Code' => "404", "Erreur" => "Ce film n'existe pas"]);
             return new Response($reservationJson, Response::HTTP_NOT_FOUND);
