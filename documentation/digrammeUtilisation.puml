@@ -1,0 +1,21 @@
+@startuml
+
+:utilisateur anonyme:
+:Utilisateur:
+(Voir les films à l'affiche) as vf
+(Voir les détails d'un film) as df
+(Se connecter) as co
+(Se déconnecter) as deco
+(Créer un compte utilisateur) as cr
+(Réserver des places pour une séance) as res
+
+:utilisateur anonyme: --> (vf)
+:utilisateur anonyme: --> (cr)
+:utilisateur anonyme: --> (df)
+:utilisateur anonyme: --> (co)
+:Utilisateur: --> (deco)
+Utilisateur --> (vf)
+Utilisateur --> (cr)
+Utilisateur --> (df)
+Utilisateur --> (res)
+@enduml
