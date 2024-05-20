@@ -51,16 +51,16 @@ class FilmController extends AbstractController
         $newReservation = new Reservation();
         $reservation = $serializer->deserialize($reservation, Reservation::class, 'json');
         $user = $this->getUser();
-        $seance = $seanceRepository->find($id);
+        $seance = $seanceRepository->seanceDispo($id);
         if (empty($seance)) {
-            $reservationJson = json_encode(['Code' => "404", "Erreur" => "Ce film n'existe pas"]);
+            $reservationJson = json_encode(['Code' => "404", "Erreur" => "Cette séance est introuvable"]);
             return new Response($reservationJson, Response::HTTP_NOT_FOUND);
         }
-        if ($seance->getDateProjection() > new \DateTime()) {
-            $reservationJson = json_encode(['Code' => '404', 'Erreur' => "Cette séance n'éxiste plus"]);
-            return new Response($reservationJson, Response::HTTP_NOT_FOUND);
-        }
-        if ($seance->getNbPlace() < $reservation->getNbPlaces()) {
+//        if ($seance->getDateProjection() < new \DateTime('now')) {
+//            $reservationJson = json_encode(['Code' => '404', 'Erreur' => "Cette séance n'éxiste plus"]);
+//            return new Response($reservationJson, Response::HTTP_NOT_FOUND);
+//        }
+        if ($seance[0]->getNbPlace() < $reservation->getNbPlaces()) {
             $reservationJson = json_encode(['Code' => '400', 'Erreur' => "Cette séance n'a plus assez de place"]);
             return new Response($reservationJson, Response::HTTP_BAD_REQUEST);
         }
@@ -70,13 +70,13 @@ class FilmController extends AbstractController
         $newReservation->setDateReservation($dateReservation);
         $newReservation->setMontant($montant);
         $newReservation->setNbPlaces($nbPlaces);
-        $newReservation->setSeance($seance);
+        $newReservation->setSeance($seance[0]);
         $newReservation->setUser($user);
-        $seance->setNbPlace($seance->getNbPlace() - $nbPlaces);
+        $seance[0]->setNbPlace($seance[0]->getNbPlace() - $nbPlaces);
         $entityManager->persist($newReservation);
-        $entityManager->persist($seance);
+        $entityManager->persist($seance[0]);
         $entityManager->flush();
-        $reservationJson = json_encode(["Code" => '200', "Message" => "La réservation a bien été effectuée pour le film " . $seance->getFilm()->getTitre() . "."]);
+        $reservationJson = json_encode(["Code" => '200', "Message" => "La réservation a bien été effectuée pour le film " . $seance[0]->getFilm()->getTitre() . "."]);
         return new Response($reservationJson, Response::HTTP_OK);
 
     }

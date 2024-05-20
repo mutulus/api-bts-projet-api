@@ -20,7 +20,18 @@ class SeanceRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Seance::class);
     }
-
+    public function seanceDispo(int $id): array
+    {
+        $date = new \DateTime();
+        return $this->createQueryBuilder('s')
+            ->select('s')
+            ->where('s.dateProjection >= :date')
+            ->andWhere('s.id = :id')
+            ->setParameter('date', $date)
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
     //    /**
     //     * @return Seance[] Returns an array of Seance objects
     //     */

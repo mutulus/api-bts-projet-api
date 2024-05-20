@@ -50,6 +50,7 @@ class FilmRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+
     public function findFilmDetailId(int $id) : array
     {
         $date=new \DateTime();
