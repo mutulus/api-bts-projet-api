@@ -64,7 +64,11 @@ class FilmController extends AbstractController
             $reservationJson = json_encode(['Code' => '400', 'Erreur' => "Cette séance n'a plus assez de place"]);
             return new Response($reservationJson, Response::HTTP_BAD_REQUEST);
         }
-        $montant = $reservation->getMontant();
+        if ($seance[0]->getNbPlace() <= 0) {
+            $reservationJson = json_encode(['Code' => '400', 'Erreur' => "Vous ne pouvez pas réserver 0 ou moins de places pour une séance"]);
+            return new Response($reservationJson, Response::HTTP_BAD_REQUEST);
+        }
+        $montant = $reservation->getNbPlaces()*$seance[0]->getTarifNormal();
         $nbPlaces = $reservation->getNbPlaces();
         $dateReservation = new \DateTime();
         $newReservation->setDateReservation($dateReservation);
