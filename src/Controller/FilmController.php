@@ -76,7 +76,7 @@ class FilmController extends AbstractController
         $entityManager->persist($newReservation);
         $entityManager->persist($seance[0]);
         $entityManager->flush();
-        $reservationJson = json_encode(["Code" => '200', "Message" => "La réservation a bien été effectuée pour le film " . $seance[0]->getFilm()->getTitre() . "."]);
+        $reservationJson = json_encode(["Code" => '200', "Message" => "La réservation a bien été effectuée pour le film " . $seance[0]->getFilm()->getTitre() . " pour le montant de $montant € ."]);
         return new Response($reservationJson, Response::HTTP_OK);
 
     }
